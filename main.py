@@ -6,8 +6,9 @@ import pygame
 #import project
 import node
 import camera
-import graph
+import control
 import inputmanager
+import assetmanager
 
 #main class
 class Main():
@@ -46,26 +47,37 @@ class Main():
     #initialize the game engine
     def initEngine(self):
         #make engine related variables
+        self.render = node.Node()
         self.cam = camera.Camera(self.scene, (16,12))
-        self.cam2d = camera.Camera(self.scene, (1,1))
-        self.graph = graph.Graph(self.cam)
-        self.graph2d = graph.Graph(self.cam2d)
+        self.render.attach(self.cam)
+
         self.inputManager = inputmanager.InputManager()
+        self.assetManager = assetmanager.AssetManager('Assets/')
+
+        self.inputManager.register('back', self.quit)
 
     #initialize the game
     def initGame(self):
-        self.inputManager.register('back', self.quit)
+        b = node.Node()
+        b.image = self.assetManager.box((8,8))
+        b.attachControl(control.Control(120))
+        self.render.attach(b)
+
+        b2 = node.Node()
+        b2.image = self.assetManager.box((32,32), (255,0,0))
+        b2.setDepth(-1)
+        b2.attachControl(control.Control(40))
+        b.attach(b2)
 
     #start the game
     def start(self):
         self.running = True
         while self.running:
             self.inputManager.update()
-            self.graph.update()
-            self.graph2d.update()
-            self.graph.render()
-            self.graph2d.render()
+            self.render.update()
+            self.cam.render()
             self.clock.tick(self.fps)
+            pygame.transform.scale(self.scene, (self.w, self.h), self.screen)
             pygame.display.update()
 
     #safely exit the game

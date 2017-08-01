@@ -45,7 +45,7 @@ class InputManager():
             elif e.type == pygame.JOYAXISMOTION:
                 state = e.value * (abs(e.value) > self.deadzone)
                 try:
-                    for function in self.listeners[self.axis[e.axis]]
+                    for function in self.listeners[self.axis[e.axis]]:
                         function(state)
                 except KeyError:
                     pass

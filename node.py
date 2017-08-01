@@ -38,11 +38,8 @@ class Node():
 
     def getAbsoluteXY(self):
         if self.parent:
-            absolute = self.parent.getAbsoluteXY()
-            absolute[0] += self.pos[0]
-            absolute[1] += self.pos[1]
-            return absolute
-        return [0,0]
+            return [self.pos[0] + self.parent.getAbsoluteXY()[0], self.pos[1] + self.parent.getAbsoluteXY()[1]]
+        return [self.pos[0], self.pos[1]]
 
     def getFamily(self):
         family = [self]
@@ -54,5 +51,4 @@ class Node():
         for control in self.controls:
             control.update()
         for node in self.children:
-            for control in node.controls:
-                control.update()
+            node.update()

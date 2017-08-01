@@ -2,7 +2,7 @@ import node
 
 class Camera(node.Node):
     def __init__(self, scene, unit = (1,1)):
-        node.Node.__init__()
+        node.Node.__init__(self)
         self.center = (scene.get_width()/2, scene.get_height()/2)
         self.unit = unit
         self.scene = scene
@@ -10,19 +10,23 @@ class Camera(node.Node):
     #render a given node
     def renderNode(self, node):
         #get the relative position to the camera
-        rel = (node.pos[0]-self.pos[0], node.pos[1]-self.pos[1])
+        c = self.getAbsoluteXY()
+        n = node.getAbsoluteXY()
+        rel = (n[0]-c[0], n[1]-c[1])
 
         #convert to pixel location and center
-        pxPos = (relPos[0]*self.unit[0], relPos[1]*self.unit[1])
-        centeredPos = (pxPos[0]+self.center[0], pxPos[1]+self.center[1])
+        px = (rel[0]*self.unit[0], rel[1]*self.unit[1])
+        centered = (px[0]+self.center[0], px[1]+self.center[1])
         
         #draw node
-        self.scene.blit(node.getImage(), centeredPos)
+        if node.image:
+            self.scene.blit(node.image, centered)
 
     def render(self):
+        self.scene.fill((0,0,0))
         order = {}
         for node in self.parent.getFamily():
-            index = (node.pos[2], node.pos[1])
+            index = (node.pos[2], node.getAbsoluteXY()[1])
             if index in order:
                 order[index].append(node)
             else:
@@ -30,4 +34,4 @@ class Camera(node.Node):
 
         for key, nodeList in sorted(order.items()):
             for node in nodeList:
-                renderNode(node)
+                self.renderNode(node)

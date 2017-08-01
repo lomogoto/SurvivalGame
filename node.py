@@ -1,20 +1,58 @@
 #class for all game nodes
 class Node():
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.pos = [0, 0, 0]
-        self.controls = {}
+        self.controls = []
         self.image = None
+        self.parent = None
+        self.children = []
 
-    def getImage(self):
-        return self.image
+    def attach(self, child):
+        if child.parent:
+            child.parent.detatch(child)
+        child.parent = self
+        self.children.append(child)
 
-    def setLocation(self, x, y, z):
-        self.pos = [x, y]
+    def detach(self, child):
+        child.parent = None
+        self.children.remove(child)
 
-    def move(self, x, y, z):
+    def attachControl(self, control):
+        control.node = self
+        self.controls.append(control)
+
+    def detachControl(self, control):
+        control.node = None
+        self.controls.remove(control)
+
+    def setDepth(self, z):
+        self.pos[2] = z
+
+    def setXY(self, x, y):
+        self.pos[0] = x
+        self.pos[1] = y
+
+    def move(self, x, y):
         self.pos[0] += x
         self.pos[1] += y
 
-    def attachControl(self, control):
-        self.controls[control.getName()] = control
+    def getAbsoluteXY(self):
+        if self.parent:
+            absolute = self.parent.getAbsoluteXY()
+            absolute[0] += self.pos[0]
+            absolute[1] += self.pos[1]
+            return absolute
+        return [0,0]
+
+    def getFamily(self):
+        family = [self]
+        for child in self.children:
+            family += child.getFamily()
+        return family
+
+    def update(self):
+        for control in self.controls:
+            control.update()
+        for node in self.children:
+            for control in node.controls:
+                control.update()

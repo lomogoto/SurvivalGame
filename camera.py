@@ -1,7 +1,9 @@
-class Camera():
+import node
+
+class Camera(node.Node):
     def __init__(self, scene, unit = (1,1)):
-        self.pos = [0, 0]
-        self.center = (scene.w/2, scene.h/2)
+        node.Node.__init__()
+        self.center = (scene.get_width()/2, scene.get_height()/2)
         self.unit = unit
         self.scene = scene
 
@@ -16,3 +18,16 @@ class Camera():
         
         #draw node
         self.scene.blit(node.getImage(), centeredPos)
+
+    def render(self):
+        order = {}
+        for node in self.parent.getFamily():
+            index = (node.pos[2], node.pos[1])
+            if index in order:
+                order[index].append(node)
+            else:
+                order[index] = [node]
+
+        for key, nodeList in sorted(order.items()):
+            for node in nodeList:
+                renderNode(node)

@@ -4,11 +4,11 @@
 import pygame
 
 #import project
-import node
-import camera
-import control
-import inputmanager
-import assetmanager
+from Engine import node
+from Engine import camera
+from Engine import inputmanager
+from Engine import assetmanager
+from Controllers import orbit
 
 #main class
 class Main():
@@ -60,13 +60,13 @@ class Main():
     def initGame(self):
         b = node.Node()
         b.image = self.assetManager.box((8,8))
-        b.attachControl(control.Control(120))
+        b.attachControl(orbit.Orbit(120))
         self.render.attach(b)
 
         b2 = node.Node()
         b2.image = self.assetManager.box((32,32), (255,0,0))
         b2.setDepth(-1)
-        b2.attachControl(control.Control(40))
+        b2.attachControl(orbit.Orbit(40))
         b.attach(b2)
 
     #start the game

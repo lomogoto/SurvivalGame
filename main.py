@@ -6,6 +6,7 @@ import pygame
 #import project
 import node
 import camera
+import graph
 
 #main class
 class Main():
@@ -39,8 +40,10 @@ class Main():
         self.scene = pygame.Surface((res, res*self.h/self.w))
 
     def initEngine(self):
-        self.cam2d = camera.Camera(self.scene, (1,1))
         self.cam = camera.Camera(self.scene, (16,12))
+        self.cam2d = camera.Camera(self.scene, (1,1))
+        self.graph = graph.Graph(cam)
+        self.graph2d = graph.Graph(cam2d)
 
     def initGame(self):
         pass

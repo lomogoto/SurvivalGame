@@ -6,7 +6,7 @@ class Camera():
         self.scene = scene
 
     #render a given node
-    def render(self, node):
+    def renderNode(self, node):
         #get the relative position to the camera
         rel = (node.pos[0]-self.pos[0], node.pos[1]-self.pos[1])
 
@@ -15,4 +15,4 @@ class Camera():
         centeredPos = (pxPos[0]+self.center[0], pxPos[1]+self.center[1])
         
         #draw node
-        self.scene.blit(node.getImage(), centered pos)
+        self.scene.blit(node.getImage(), centeredPos)

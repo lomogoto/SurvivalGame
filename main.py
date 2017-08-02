@@ -34,8 +34,8 @@ class Main():
             self.w = pygame.display.Info().current_w
             self.h = pygame.display.Info().current_h
         else:
-            self.w = 800
-            self.h = 600
+            self.w = 1280
+            self.h = 720
 
         #make the screen and clock
         self.screen = pygame.display.set_mode((self.w, self.h))
@@ -58,16 +58,21 @@ class Main():
 
     #initialize the game
     def initGame(self):
-        b = node.Node()
-        b.image = self.assetManager.box((8,8))
-        b.attachControl(orbit.Orbit(120))
-        self.render.attach(b)
+        t = node.Node()
+        t.image = self.assetManager.text('font.png', 'AC')
+        t.setXY(0, 0)
+        t.setDepth(1)
+        self.render.attach(t)
+
+        b1 = node.Node()
+        b1.image = self.assetManager.box((16, 36), (255, 0, 255))
+        #b1.attachControl(orbit.Orbit(3, 100))
+        t.attach(b1)
 
         b2 = node.Node()
-        b2.image = self.assetManager.box((32,32), (255,0,0))
-        b2.setDepth(-1)
-        b2.attachControl(orbit.Orbit(40))
-        b.attach(b2)
+        b2.image = self.assetManager.box((16, 24), (255, 0, 0))
+        b2.attachControl(orbit.Orbit(1.5, 25))
+        b1.attach(b2)
 
     #start the game
     def start(self):

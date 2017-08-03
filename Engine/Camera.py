@@ -1,8 +1,8 @@
-from Engine import node
+from Engine import Node
 
-class Camera(node.Node):
+class Camera(Node.Node):
     def __init__(self, scene, unit = (1,1)):
-        node.Node.__init__(self)
+        Node.Node.__init__(self)
         self.center = (scene.get_width()/2, scene.get_height()/2)
         self.unit = unit
         self.scene = scene
@@ -23,7 +23,7 @@ class Camera(node.Node):
             self.scene.blit(node.image, centered)
 
     def render(self):
-        self.scene.fill((0,0,0))
+        self.scene.fill((100,100,100))
         order = {}
         for node in self.parent.getFamily():
             index = (node.pos[2], -node.getAbsoluteXY()[1])

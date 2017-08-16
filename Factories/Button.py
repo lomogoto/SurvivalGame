@@ -10,6 +10,6 @@ class Button():
         button.setTag('name', title)
         button.setTag('function', function)
         button.setTag('args', args)
-        button.image = AssetManager.text('Assets/font.png', title)
+        button.image = AssetManager.text('Assets/GUI/font.png', title)
 
         return button

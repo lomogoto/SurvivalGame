@@ -2,6 +2,7 @@ from Engine import Node
 from Engine import AssetManager
 from Engine import InputManager
 from Engine import FileManager
+from Engine import NetworkManager
 from Factories import Button
 from Controllers import MenuNav
 
@@ -15,12 +16,12 @@ class Menu():
         menu = Node.Node()
 
         text = Node.Node()
-        text.image = AssetManager.text('Assets/font.png', title)
+        text.image = AssetManager.text('Assets/GUI/font.png', title)
         text.setXY(-9,6)
         menu.attach(text)
 
         cursor = Node.Node()
-        cursor.image = AssetManager.load('Assets/cursor.png')
+        cursor.image = AssetManager.load('Assets/GUI/cursor.png')
         cursor.setXY(-1, 0)
         text.attach(cursor)
 
@@ -44,12 +45,27 @@ class Menu():
         return menu
 
     def makeMainMenu(self):
-        buttonList = (('PLAY', self.makeSettingsMenu),
-                ('JOIN', self.makeSettingsMenu),
+        NetworkManager.closeSockets()
+        buttonList = (('PLAY', self.makePlayMenu),
+                ('JOIN', self.makeJoinMenu),
                 ('CHARACTER', self.makeCharacterMenu),
                 ('SETTINGS', self.makeSettingsMenu),
                 ('QUIT', self.quit))
         return self.makeMenu('MAIN MENU', buttonList)
+
+    def makePlayMenu(self):
+        NetworkManager.startServer()
+        buttonList = (('START', self.makeMainMenu),
+                ('BACK', self.makeMainMenu))
+        return self.makeMenu('PLAY', buttonList)
+
+    def makeJoinMenu(self):
+        servers = NetworkManager.getServers()
+        buttonList = [('REFRESH', self.makeJoinMenu)]
+        for server in servers:
+            buttonList.append((server, self.joinServer, servers[server]))
+        buttonList.append(('BACK', self.makeMainMenu))
+        return self.makeMenu('JOIN', buttonList)
 
     def makeCharacterMenu(self):
         FileManager.save('Data/settings.json.gz')
@@ -82,6 +98,10 @@ class Menu():
                 ('MAGENTA', self.setColor, [100, 0, 100]),
                 ('BACK', self.makeCharacterMenu))
         return self.makeMenu('COLOR', buttonList)
+
+    def joinServer(self, address):
+        print(address)
+        return self.makeMainMenu()
 
     def setResolution(self, args):
         self.settings['dimentions'] = args

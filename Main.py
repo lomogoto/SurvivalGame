@@ -9,6 +9,7 @@ from Engine import Camera
 from Engine import InputManager
 from Engine import FileManager
 from Factories import Menu
+from Factories import Player
 
 #main class
 class Main():
@@ -55,6 +56,10 @@ class Main():
     def initGame(self):
         menuFactory = Menu.Menu(quit)
         self.render.attach(menuFactory.makeMainMenu())
+
+        playerFactory = Player.Player()
+
+        self.render.attach(playerFactory.makePlayer(None))
 
     #start the game
     def start(self):

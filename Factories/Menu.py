@@ -4,11 +4,13 @@ from Engine import InputManager
 from Engine import FileManager
 from Engine import NetworkManager
 from Factories import Button
+from Factories import World
 from Controllers import MenuNav
 
 class Menu():
     def __init__(self, quitFunction):
         self.buttonFactory = Button.Button()
+        self.worldFactory = World.World()
         self.quit = quitFunction
         self.settings = FileManager.load('Data/settings.json.gz')
 
@@ -55,7 +57,7 @@ class Menu():
 
     def makePlayMenu(self):
         NetworkManager.startServer()
-        buttonList = (('START', self.makeMainMenu),
+        buttonList = (('NEW', self.worldFactory.makeWorld, 0),
                 ('BACK', self.makeMainMenu))
         return self.makeMenu('PLAY', buttonList)
 

@@ -4,6 +4,15 @@ import gzip
 
 files = {}
 
+currentLocation = None
+
+def setSaveFile(location):
+    global currentLocation
+    currentLocation = location
+
+def getFromSave(key):
+    return load(currentLocation)[key]
+
 def save(location, data = None):
     if data:
         files[location] = data

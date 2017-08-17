@@ -9,5 +9,6 @@ class Player():
     def makePlayer(self, color):
         player = Node.Node()
         player.attachControl(PlayerAnim.PlayerAnim(color))
+
         return player
         

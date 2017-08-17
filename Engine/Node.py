@@ -43,6 +43,12 @@ class Node():
     def setTag(self, name, value):
         self.tags[name] = value
 
+    def getDepth(self):
+        return self.pos[2]
+
+    def getXY(self):
+        return (self.pos[0], self.pos[1])
+
     def getAbsoluteXY(self):
         if self.parent:
             return [self.pos[0] + self.parent.getAbsoluteXY()[0], self.pos[1] + self.parent.getAbsoluteXY()[1]]

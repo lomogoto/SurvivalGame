@@ -8,6 +8,7 @@ from Engine import Node
 from Engine import Camera
 from Engine import InputManager
 from Engine import FileManager
+from Engine import NetworkManager
 from Factories import Menu
 from Factories import Player
 
@@ -17,7 +18,7 @@ class Main():
     def __init__(self):
         #playback constants
         self.res = 320
-        self.fps = 60
+        self.fps = 30
 
         #initialize pygame
         pygame.init()
@@ -57,10 +58,6 @@ class Main():
         menuFactory = Menu.Menu(quit)
         self.render.attach(menuFactory.makeMainMenu())
 
-        playerFactory = Player.Player()
-
-        self.render.attach(playerFactory.makePlayer(None))
-
     #start the game
     def start(self):
         self.running = True
@@ -71,9 +68,11 @@ class Main():
             self.clock.tick(self.fps)
             pygame.transform.scale(self.scene, (self.screen.get_width(), self.screen.get_height()), self.screen)
             pygame.display.update()
+            print(self.clock.get_fps())
 
     #safely exit the game
     def quit(self, state):
+        NetworkManager.closeSockets()
         self.running = False
         return Node.Node()
 

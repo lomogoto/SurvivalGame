@@ -9,9 +9,10 @@ def load(path):
         images[path].set_colorkey(colorkey)
     return images[path]
 
-def box(size, color = (255, 255, 255)):
+def box(size, color = colorkey):
     b = pygame.Surface(size)
     b.fill(color)
+    b.set_colorkey(colorkey)
     return b
 
 def text(fontpath, string, charwidth = 8):

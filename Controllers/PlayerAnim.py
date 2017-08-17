@@ -6,7 +6,6 @@ class PlayerAnim():
         self.frame = 0
         self.down1 = AssetManager.load('Assets/Player/down.png')
         self.down2 = transform.flip(self.down1, True, False)
-        self.node.setTag('anim', None)
 
     def update(self):
         if self.frame%30 < 15:

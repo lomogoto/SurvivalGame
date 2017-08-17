@@ -19,12 +19,13 @@ class Menu():
 
         text = Node.Node()
         text.image = AssetManager.text('Assets/GUI/font.png', title)
-        text.setXY(-9,6)
+        text.setX(-9)
+        text.setY(6)
         menu.attach(text)
 
         cursor = Node.Node()
         cursor.image = AssetManager.load('Assets/GUI/cursor.png')
-        cursor.setXY(-1, 0)
+        cursor.setX(-1)
         text.attach(cursor)
 
         buttons = []
@@ -37,7 +38,8 @@ class Menu():
 
         rank = 0
         for button in buttons:
-            button.setXY(1, -2 - rank)
+            button.setX(1)
+            button.setY(-2-rank)
             text.attach(button)
             rank += 1
 

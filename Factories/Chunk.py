@@ -18,7 +18,8 @@ class Chunk():
         for i in range(20):
             for j in range(20):
                 block = self.blockFactory.makeBlock(self.getBlockName(pos[0] + i, pos[1] + j))
-                block.setXY(i,j)
+                block.setX(i)
+                block.setY(j)
                 chunk.attach(block)
 
         return chunk

@@ -9,7 +9,8 @@ class ChunkLoader():
         self.chunkSize = 20
 
     def update(self):
-        x, y = self.follow.getAbsoluteXY()
+        x = self.follow.getX()
+        y = self.follow.getY()
         x %= self.chunkSize
         y %= self.chunkSize
 
@@ -22,7 +23,8 @@ class ChunkLoader():
                     newChunks[str(pos)] = self.chunks[str(pos)]
                 else:
                     newChunks[str(pos)] = self.chunkFactory.makeChunk(pos)
-                    newChunks[str(pos)].setXY(pos[0], pos[1])
+                    newChunks[str(pos)].setX(pos[0])
+                    newChunks[str(pos)].setY(pos[1])
 
         for chunk in self.chunks:
             self.node.detach(self.chunks[chunk])

@@ -9,69 +9,34 @@ class Camera(Node.Node):
         self.scene = scene
         self.w = scene.get_width()
         self.h = scene.get_height()
-        self.layers = {}
+        self.queue = {}
         self.clip = 10
 
-    #render a given node
-    def renderNode(self, node):
-        if node.image:
-            #get the relative position to the camera
-            c = self.getAbsoluteXY()
-            n = node.getAbsoluteXY()
-            rel = (n[0]-c[0], -(n[1]-c[1]))
-            if abs(rel[0]) > self.clip or abs(rel[1]) > self.clip:
-                return
-
-            #convert to pixel location and center
-            px = (rel[0]*self.unit[0], rel[1]*self.unit[1])
-            centered = (px[0]+self.center[0]-self.unit[0]/2, px[1]+self.center[1]-(node.image.get_height()-self.unit[1]/2))
+    def draw(self, image, pos):
+        px = (pos[2]*self.unit[0], -pos[1]*self.unit[1])
+        centered = (px[0]+self.center[0]-self.unit[0]/2, px[1]+self.center[1]-(image.get_height()-self.unit[1]/2))
         
-            #draw node
-            self.scene.blit(node.image, centered)
+        self.scene.blit(image, centered)
 
-    def renderOld(self):
+    def render(self):
+        self.queue = {}
         self.scene.fill((100,100,100))
-        order = {}
-        for node in self.parent.getFamily():
-            index = (node.pos[2], -node.getAbsoluteXY()[1])
-            if index in order:
-                order[index].append(node)
-            else:
-                order[index] = [node]
 
-        for key, nodeList in sorted(order.items()):
-            for node in nodeList:
-                self.renderNode(node)
+        self.queueNodes(self.getParent())
 
-    def makeNewLayer(self):
-        AssetManager.box((self.w, self.h))
-        return layer
+        for pos in sorted(self.queue):
+            for image in self.queue[pos]:
+                self.draw(image, pos)
 
-    def draw(self, layer, image, pos):
-        if image:
-            #get the relative position to the camera
-            c = self.getXY()
-            rel = (pos[0]-c[0], -(pos[1]-c[1]))
-            if abs(rel[0]) > self.clip or abs(rel[1]) > self.clip:
-                return
+    def queueNodes(self, node, pos = (0,0,0)):
+        pos = (node.getDepth(), pos[1]+node.getY(), pos[2]+node.getX())
+        rel = (pos[0], pos[1]-self.getY(), (pos[2]-self.getX()))
+        if abs(rel[1]) > self.clip or abs(rel[2]) > self.clip or node.getImage() == None:
+            pass
+        elif not rel in self.queue:
+            self.queue[rel] = [node.getImage()]
+        else:
+            self.queue[rel].append(node.getImage())
 
-            #convert to pixel location and center
-            px = (rel[0]*self.unit[0], rel[1]*self.unit[1])
-            centered = (px[0]+self.center[0]-self.unit[0]/2, px[1]+self.center[1]-(image.get_height()-self.unit[1]/2))
-        
-            #draw node
-            self.layers[layer].blit(image, centered)
-
-    def render(self, node = None, pos = (0, 0)):
-        if node == None:
-            self.layers = {}
-            self.scene.fill((255,255,255))
-            node = self.parent
-        if not node.getDepth() in self.layers:
-            self.layers[node.getDepth()] = AssetManager.box((self.w, self.h))
-        pos = (pos[0]+node.getXY()[0], pos[1]+node.getXY()[1])
-        self.draw(node.getDepth(), node.image, pos)
-        for c in node.children:
-            self.render(c, pos)
-        for layer in sorted(self.layers):
-            self.scene.blit(self.layers[layer], (0,0))
+        for child in node.getChildren():
+            self.queueNodes(child, pos)

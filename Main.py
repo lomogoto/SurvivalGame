@@ -18,7 +18,7 @@ class Main():
     def __init__(self):
         #playback constants
         self.res = 320
-        self.fps = 30
+        self.fps = 60
 
         #initialize pygame
         pygame.init()
@@ -61,6 +61,7 @@ class Main():
     #start the game
     def start(self):
         self.running = True
+        f = 0
         while self.running:
             InputManager.update()
             self.render.update()
@@ -68,7 +69,11 @@ class Main():
             self.clock.tick(self.fps)
             pygame.transform.scale(self.scene, (self.screen.get_width(), self.screen.get_height()), self.screen)
             pygame.display.update()
-            print(self.clock.get_fps())
+            if f > self.fps:
+                print(self.clock.get_fps())
+                f = 0
+            else:
+                f += 1
 
     #safely exit the game
     def quit(self, state):

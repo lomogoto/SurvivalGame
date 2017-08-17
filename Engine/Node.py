@@ -29,42 +29,35 @@ class Node():
     def hasControl(self, controlType):
         return any(isinstance(control, controlType) for control in self.controls)
 
-    def move(self, x, y):
-        self.pos[0] += x
-        self.pos[1] += y
-
-    def setXY(self, x, y):
-        self.pos[0] = x
-        self.pos[1] = y
-
-    def setDepth(self, z):
-        self.pos[2] = z
-
-    def setTag(self, name, value):
-        self.tags[name] = value
-
-    def getDepth(self):
-        return self.pos[2]
-
-    def getXY(self):
-        return (self.pos[0], self.pos[1])
-
-    def getAbsoluteXY(self):
-        if self.parent:
-            return [self.pos[0] + self.parent.getAbsoluteXY()[0], self.pos[1] + self.parent.getAbsoluteXY()[1]]
-        return [self.pos[0], self.pos[1]]
-
-    def getTag(self, name):
-        return self.tags[name]
-
+    def getChildren(self):
+        return self.children
     def getParent(self):
         return self.parent
 
-    def getFamily(self):
-        family = [self]
-        for child in self.children:
-            family += child.getFamily()
-        return family
+    def setImage(self, image):
+        self.image = image
+    def getImage(self):
+        return self.image
+
+    def setX(self, x):
+        self.pos[2] = x
+    def getX(self):
+        return self.pos[2]
+
+    def setY(self, y):
+        self.pos[1] = y
+    def getY(self):
+        return self.pos[1]
+
+    def setDepth(self, z):
+        self.pos[0] = z
+    def getDepth(self):
+        return self.pos[0]
+
+    def setTag(self, name, value):
+        self.tags[name] = value
+    def getTag(self, name):
+        return self.tags[name]
 
     def update(self):
         for control in self.controls:
